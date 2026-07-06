@@ -1,0 +1,43 @@
+{
+    "name": "event_mangement_backend",
+    "version": "1.0.0",
+    "description": "- Node.js\r - Express.js\r - MongoDB\r - Mongoose\r - Dayjs",
+    "homepage": "https://github.com/Jerin-johnson/event-management-backend#readme",
+    "bugs": {
+        "url": "https://github.com/Jerin-johnson/event-management-backend/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Jerin-johnson/event-management-backend.git"
+    },
+    "license": "ISC",
+    "author": "",
+    "type": "module",
+    "main": "index.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier . --write",
+        "check-format": "prettier . --check"
+    },
+    "dependencies": {
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "helmet": "^8.2.0",
+        "mongoose": "^9.7.3",
+        "morgan": "^1.11.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.6.0",
+        "globals": "^17.7.0",
+        "prettier": "^3.9.4"
+    }
+}
