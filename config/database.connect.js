@@ -1,6 +1,6 @@
 import { connect } from "mongoose";
-import env from "./env";
-import { MESSAGE } from "../constants/message.constants";
+import env from "./env.js";
+import { MESSAGE } from "../constants/message.constants.js";
 
 async function connectMongoDB() {
     try {

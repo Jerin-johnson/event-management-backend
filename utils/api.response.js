@@ -1,4 +1,13 @@
-const successResponse = (res, data, message = "Success", statusCode = 200) => {
+import { ERROR_MESSAGES } from "../constants/error.constants.js";
+import { HTTP_STATUS } from "../constants/http.constants.js";
+import { SUCCESS_MESSAGES } from "../constants/success.constants.js";
+
+const successResponse = (
+    res,
+    data,
+    message = SUCCESS_MESSAGES.SUCCESS,
+    statusCode = HTTP_STATUS.OK
+) => {
     return res.status(statusCode).json({
         success: true,
         message,
@@ -6,7 +15,12 @@ const successResponse = (res, data, message = "Success", statusCode = 200) => {
     });
 };
 
-const errorResponse = (res, message = "Server Error", statusCode = 500, errors = null) => {
+const errorResponse = (
+    res,
+    message = ERROR_MESSAGES.SERVER_ERROR,
+    statusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR,
+    errors = null
+) => {
     return res.status(statusCode).json({
         success: false,
         message,

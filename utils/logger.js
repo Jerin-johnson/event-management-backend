@@ -1,4 +1,4 @@
-import { LOG_LEVEL } from "../constants/logger.constants";
+import { LOG_LEVEL } from "../constants/logger.constants.js";
 
 const formatMessage = (level, message, meta = {}) => ({
     timestamp: new Date().toISOString(),
