@@ -1,5 +1,5 @@
-import { PAGINATION } from "../constants/control.constants";
-import User from "../models/user";
+import { PAGINATION } from "../constants/control.constants.js";
+import User from "../models/user.js";
 
 export const createProfile = async (data) => {
     return await User.create(data);

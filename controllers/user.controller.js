@@ -5,12 +5,12 @@ import { successResponse } from "../utils/api.response.js";
 import asyncHandler from "express-async-handler";
 
 export const createUserProfile = asyncHandler(async (req, res) => {
-    const profile = await userService.createProfile(req.body);
+    const profile = await userService.createUserProfile(req.body);
     return successResponse(res, profile, SUCCESS_MESSAGES.PROFILE_CREATED, HTTP_STATUS.CREATED);
 });
 
 export const getUserProfiles = asyncHandler(async (req, res) => {
     const { search = "", cursor, limit } = req.query;
-    const result = await userService.getProfiles(search, cursor, limit);
+    const result = await userService.getUserProfiles(search, cursor, limit);
     return successResponse(res, result, SUCCESS_MESSAGES.PROFILES_FETCHED, HTTP_STATUS.OK);
 });

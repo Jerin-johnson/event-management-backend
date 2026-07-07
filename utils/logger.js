@@ -19,10 +19,10 @@ const error = (message, meta = {}) => {
     console.error(formatMessage(LOG_LEVEL.ERROR, message, meta));
 };
 
-const logger = Object.freeze({
+const logger = {
     info,
     warn,
     error,
-});
+};
 
 export default logger;

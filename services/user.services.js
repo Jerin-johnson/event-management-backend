@@ -1,16 +1,21 @@
 import * as userRepository from "../repositories/user.repositories.js";
-import ApiError from "../utils/ApiError.js";
-import { HTTP_STATUS, MESSAGES } from "../constants/index.js";
+import ApiError from "../utils/api.error.js";
+import { HTTP_STATUS } from "../constants/http.constants.js";
 import { PAGINATION } from "../constants/control.constants.js";
+import { ERROR_MESSAGES } from "../constants/error.constants.js";
 
 export const createUserProfile = async (data) => {
     const existingProfile = await userRepository.findProfileByName(data.name);
 
+    console.log(existingProfile);
+
     if (existingProfile) {
-        throw new ApiError(HTTP_STATUS.CONFLICT, MESSAGES.PROFILE_ALREADY_EXISTS);
+        throw new ApiError(HTTP_STATUS.CONFLICT, ERROR_MESSAGES.PROFILE_ALREADY_EXISTS);
     }
 
-    return await userRepository.createProfile(data);
+    const profile = await userRepository.createProfile(data);
+    console.log("the profile");
+    return profile;
 };
 
 export const getUserProfiles = async (
