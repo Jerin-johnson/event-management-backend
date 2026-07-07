@@ -103,7 +103,6 @@ Monitor
 
 Add
 
-- Jest
 - Supertest
 
 Target Coverage
