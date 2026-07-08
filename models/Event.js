@@ -10,7 +10,7 @@ const eventSchema = new mongoose.Schema(
         profiles: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Profile",
+                ref: "User",
                 required: true,
             },
         ],
@@ -28,7 +28,7 @@ const eventSchema = new mongoose.Schema(
         },
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Profile",
+            ref: "User",
         },
     },
     {

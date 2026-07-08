@@ -23,6 +23,7 @@ export const getProfiles = async (search = "", cursor = null, limit = PAGINATION
     return await User.find(query).sort({ _id: -1 }).limit(limit);
 };
 
-export const findProfileById = async (id) => {
-    return await User.findById(id);
+export const getUsersByIds = async (ids) => {
+    if (!ids || ids.length === 0) return [];
+    return await User.find({ _id: { $in: ids } });
 };

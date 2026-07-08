@@ -9,7 +9,7 @@ const eventLogSchema = new mongoose.Schema(
         },
         changedBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Profile",
+            ref: "User",
             required: true,
         },
         changes: {

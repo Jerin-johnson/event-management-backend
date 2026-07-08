@@ -13,6 +13,7 @@ export const ERROR_MESSAGES = {
     PROFILE_ALREADY_EXISTS: "Profile already exists.",
     PROFILE_NAME_REQUIRED: "Profile name is required.",
     INVALID_PROFILE: "Invalid profile selected.",
+    PROFILE_LENGTH_INVALID: "Profile length count doesn't match",
     NAME_MUST_ATLEAST_TWO: "Name must be at least 2 characters",
 
     // Event
