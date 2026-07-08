@@ -1,4 +1,4 @@
-import { LOG_LEVEL } from "../constants/logger.constants";
+import { LOG_LEVEL } from "../constants/logger.constants.js";
 
 const formatMessage = (level, message, meta = {}) => ({
     timestamp: new Date().toISOString(),
@@ -19,10 +19,10 @@ const error = (message, meta = {}) => {
     console.error(formatMessage(LOG_LEVEL.ERROR, message, meta));
 };
 
-const logger = Object.freeze({
+const logger = {
     info,
     warn,
     error,
-});
+};
 
 export default logger;
