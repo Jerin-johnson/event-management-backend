@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const eventSchema = new mongoose.Schema(
     {
-        title: {
-            type: String,
-            required: true,
-            trim: true,
-        },
+        // title: {
+        //     type: String,  //todo :improvments : future
+        //     required: true,
+        //     trim: true,
+        // },
         profiles: [
             {
                 type: mongoose.Schema.Types.ObjectId,

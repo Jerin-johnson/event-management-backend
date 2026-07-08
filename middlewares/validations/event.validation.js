@@ -1,8 +1,8 @@
-import { COMMON_TIMEZONES } from "../../constants/control.constants";
-import { ERROR_MESSAGES } from "../../constants/error.constants";
-import { HTTP_STATUS } from "../../constants/http.constants";
-import ApiError from "../../utils/api.error";
-import { errorResponse } from "../../utils/api.response";
+import { COMMON_TIMEZONES } from "../../constants/control.constants.js";
+import { ERROR_MESSAGES } from "../../constants/error.constants.js";
+import { HTTP_STATUS } from "../../constants/http.constants.js";
+import ApiError from "../../utils/api.error.js";
+import { errorResponse } from "../../utils/api.response.js";
 import mongoose from "mongoose";
 
 export const validateGetEventUserId = (req, res, next) => {
@@ -16,10 +16,10 @@ export const validateGetEventUserId = (req, res, next) => {
 };
 
 export const validateCreateEvent = (req, res, next) => {
-    const { title, profiles, timezone, startDateTime, endDateTime, createdBy } = req.body;
+    const { profiles, timezone, startDateTime, endDateTime, createdBy } = req.body;
 
-    if (!title || typeof title !== "string" || title.trim().length < 3) {
-        return errorResponse(res, ERROR_MESSAGES.EVENT_TITLE_LENGTH, HTTP_STATUS.BAD_REQUEST);
+    if (!createdBy) {
+        return errorResponse(res, ERROR_MESSAGES.BAD_REQUEST, HTTP_STATUS.BAD_REQUEST);
     }
 
     if (!profiles || !Array.isArray(profiles) || profiles.length === 0) {
@@ -51,8 +51,41 @@ export const validateCreateEvent = (req, res, next) => {
         return errorResponse(res, ERROR_MESSAGES.END_BEFORE_START, HTTP_STATUS.BAD_REQUEST);
     }
 
-    req.body.title = title.trim();
-    req.body.createdBy = createdBy;
+    next();
+};
+
+export const validateUpdateEvent = (req, res, next) => {
+    const { timezone, startDateTime, endDateTime, profiles } = req.body;
+
+    if (timezone) {
+        const validTimezones = [...COMMON_TIMEZONES, ...Intl.supportedValuesOf("timeZone")];
+        if (typeof timezone !== "string" || !validTimezones.includes(timezone)) {
+            return errorResponse(res, ERROR_MESSAGES.INVALID_TIMEZONE, HTTP_STATUS.BAD_REQUEST);
+        }
+    }
+
+    if (profiles !== undefined) {
+        if (!Array.isArray(profiles) || profiles.length === 0) {
+            return errorResponse(
+                res,
+                ERROR_MESSAGES.PROFILE_LENGTH_INVALID,
+                HTTP_STATUS.BAD_REQUEST
+            );
+        }
+    }
+
+    if (startDateTime && endDateTime) {
+        const start = new Date(startDateTime);
+        const end = new Date(endDateTime);
+
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            return errorResponse(res, ERROR_MESSAGES.INVALID_DATE, HTTP_STATUS.BAD_REQUEST);
+        }
+
+        if (end <= start) {
+            return errorResponse(res, ERROR_MESSAGES.END_BEFORE_START, HTTP_STATUS.BAD_REQUEST);
+        }
+    }
 
     next();
 };

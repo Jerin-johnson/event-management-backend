@@ -24,6 +24,7 @@ export const ERROR_MESSAGES = {
     EVENT_UPDATE_FAILED: "Failed to update event.",
     EVENT_DELETE_FAILED: "Failed to delete event.",
     EVENT_TITLE_LENGTH: "Title must be at least 3 characters long",
+    PART_OF_EVENT_ONLY_UPDATE: "You can only update events you are assigned to",
 
     // Date & Time
     INVALID_DATE: "Invalid date.",

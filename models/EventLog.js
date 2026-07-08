@@ -12,8 +12,16 @@ const eventLogSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
-        changes: {
+        previousValues: {
             type: Object,
+            required: true,
+        },
+        newValues: {
+            type: Object,
+            required: true,
+        },
+        changedFields: {
+            type: [String],
             required: true,
         },
     },

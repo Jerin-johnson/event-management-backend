@@ -1,5 +1,6 @@
 import * as userRepository from "../repositories/user.repositories.js";
 import * as eventRepository from "../repositories/event.repositories.js";
+import * as eventLogRepository from "../repositories/eventLog.repositories.js";
 import ApiError from "../utils/api.error.js";
 import { HTTP_STATUS } from "../constants/http.constants.js";
 import { ERROR_MESSAGES } from "../constants/error.constants.js";
@@ -31,7 +32,6 @@ export const createEvent = async (data) => {
     }
 
     const eventData = {
-        title: data.title?.trim(),
         profiles,
         timezone,
         startDateTime: start.utc().toDate(),
@@ -70,4 +70,56 @@ export const getEventsForUser = async (userId) => {
     console.log(eventsInUserTz);
 
     return eventsInUserTz;
+};
+
+export const updateEvent = async (eventId, updateData, changedBy) => {
+    const event = await eventRepository.findEventById(eventId);
+    if (!event) {
+        throw new ApiError(HTTP_STATUS.NOT_FOUND, ERROR_MESSAGES.EVENT_NOT_FOUND);
+    }
+
+    const isParticipant = event.profiles.some((p) => p._id.toString() === changedBy.toString());
+    if (!isParticipant) {
+        throw new ApiError(HTTP_STATUS.FORBIDDEN, ERROR_MESSAGES.PART_OF_EVENT_ONLY_UPDATE);
+    }
+
+    const previousValues = {
+        timezone: event.timezone,
+        startDateTime: event.startDateTime,
+        endDateTime: event.endDateTime,
+        profiles: event.profiles.map((p) => p._id),
+    };
+
+    const newUpdateData = { ...updateData };
+
+    if (updateData.startDateTime) {
+        newUpdateData.startDateTime = dayjs
+            .tz(updateData.startDateTime, updateData.timezone || event.timezone)
+            .utc()
+            .toDate();
+    }
+    if (updateData.endDateTime) {
+        newUpdateData.endDateTime = dayjs
+            .tz(updateData.endDateTime, updateData.timezone || event.timezone)
+            .utc()
+            .toDate();
+    }
+
+    const updatedEvent = await eventRepository.updateEvent(eventId, newUpdateData);
+
+    const changedFields = Object.keys(updateData);
+
+    await eventLogRepository.createLog({
+        event: eventId,
+        changedBy,
+        previousValues,
+        newValues: updateData,
+        changedFields,
+    });
+
+    return updatedEvent;
+};
+
+export const getEventLogs = async (eventId) => {
+    return await eventLogRepository.getLogsByEvent(eventId);
 };
