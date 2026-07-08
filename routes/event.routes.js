@@ -1,8 +1,13 @@
 import express from "express";
-import { getUserProfiles } from "../controllers/user.controller";
+import { createEvent, getUserEvents } from "../controllers/event.controller.js";
+import {
+    validateCreateEvent,
+    validateGetEventUserId,
+} from "../middlewares/validations/event.validation.js";
 
 const eventRouter = express.Router();
 
-eventRouter.get("/user/:userI", getUserProfiles);
+eventRouter.post("/", validateCreateEvent, createEvent);
+eventRouter.get("/user/:userId", validateGetEventUserId, getUserEvents);
 
 export default eventRouter;

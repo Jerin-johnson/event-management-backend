@@ -13,10 +13,6 @@ dayjs.extend(timezonePlugin);
 export const createEvent = async (data) => {
     const { profiles, timezone, startDateTime, endDateTime, createdBy } = data;
 
-    if (!Array.isArray(profiles) || profiles.length === 0) {
-        throw new ApiError(ERROR_MESSAGES.PROFILE_LENGTH_INVALID);
-    }
-
     const existingUsers = await userRepository.getUsersByIds(profiles);
 
     if (existingUsers.length !== profiles.length) {

@@ -15,6 +15,7 @@ export const ERROR_MESSAGES = {
     INVALID_PROFILE: "Invalid profile selected.",
     PROFILE_LENGTH_INVALID: "Profile length count doesn't match",
     NAME_MUST_ATLEAST_TWO: "Name must be at least 2 characters",
+    INVALID_USER_ID: "UserId is not valid",
 
     // Event
     EVENT_NOT_FOUND: "Event not found.",
@@ -22,6 +23,7 @@ export const ERROR_MESSAGES = {
     EVENT_CREATION_FAILED: "Failed to create event.",
     EVENT_UPDATE_FAILED: "Failed to update event.",
     EVENT_DELETE_FAILED: "Failed to delete event.",
+    EVENT_TITLE_LENGTH: "Title must be at least 3 characters long",
 
     // Date & Time
     INVALID_DATE: "Invalid date.",
@@ -29,6 +31,7 @@ export const ERROR_MESSAGES = {
     INVALID_TIMEZONE: "Invalid timezone.",
     START_DATE_REQUIRED: "Start date is required.",
     END_DATE_REQUIRED: "End date is required.",
+    START_END_TIME_REQUIRED: "Start and End date/time are required",
     START_DATE_IN_PAST: "Start date cannot be in the past.",
     END_DATE_IN_PAST: "End date cannot be in the past.",
     END_BEFORE_START: "End date/time must be after the start date/time.",
