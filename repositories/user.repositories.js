@@ -27,3 +27,7 @@ export const getUsersByIds = async (ids) => {
     if (!ids || ids.length === 0) return [];
     return await User.find({ _id: { $in: ids } });
 };
+
+export const getUserById = async (id) => {
+    return await User.findById(id);
+};

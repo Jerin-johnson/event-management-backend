@@ -36,5 +36,10 @@ const eventSchema = new mongoose.Schema(
     }
 );
 
+eventSchema.index({
+    profiles: 1,
+    startDateTime: -1,
+});
+
 const Event = mongoose.model("Event", eventSchema);
 export default Event;

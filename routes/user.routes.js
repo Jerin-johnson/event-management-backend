@@ -4,7 +4,7 @@ import { validateCreateUserProfile } from "../middlewares/validations/user.valid
 
 const userRouter = express.Router();
 
-userRouter.get("/users", getUserProfiles);
-userRouter.post("/users", validateCreateUserProfile, createUserProfile);
+userRouter.get("/", getUserProfiles);
+userRouter.post("/", validateCreateUserProfile, createUserProfile);
 
 export default userRouter;
