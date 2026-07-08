@@ -1,4 +1,4 @@
-import EventLog from "../models/EventLog";
+import EventLog from "../models/EventLog.js";
 
 export const createLog = async (logData) => {
     return await EventLog.create(logData);

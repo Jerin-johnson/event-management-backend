@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/events", eventRouter);
 app.use("/api/v1/health", healthRouter);
-app.use("/api/timezones", timeZoneRouter);
+app.use("/api/v1/timezones", timeZoneRouter);
 
 app.use(errorHandler);
 

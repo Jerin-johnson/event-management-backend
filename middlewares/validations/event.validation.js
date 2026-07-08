@@ -19,7 +19,7 @@ export const validateCreateEvent = (req, res, next) => {
     const { profiles, timezone, startDateTime, endDateTime, createdBy } = req.body;
 
     if (!createdBy) {
-        return errorResponse(res, ERROR_MESSAGES.BAD_REQUEST, HTTP_STATUS.BAD_REQUEST);
+        return errorResponse(res, ERROR_MESSAGES.CREATEDBY_MISSING, HTTP_STATUS.BAD_REQUEST);
     }
 
     if (!profiles || !Array.isArray(profiles) || profiles.length === 0) {
@@ -55,7 +55,11 @@ export const validateCreateEvent = (req, res, next) => {
 };
 
 export const validateUpdateEvent = (req, res, next) => {
-    const { timezone, startDateTime, endDateTime, profiles } = req.body;
+    const { timezone, startDateTime, endDateTime, profiles, changedBy } = req.body;
+
+    if (!changedBy) {
+        return errorResponse(res, ERROR_MESSAGES.CHANGEDBY_MISSING, HTTP_STATUS.BAD_REQUEST);
+    }
 
     if (timezone) {
         const validTimezones = [...COMMON_TIMEZONES, ...Intl.supportedValuesOf("timeZone")];

@@ -1,4 +1,4 @@
-import { successResponse } from "../utils/response.js";
+import { successResponse } from "../utils/api.response.js";
 import { COMMON_TIMEZONES } from "../constants/control.constants.js";
 import { SUCCESS_MESSAGES } from "../constants/success.constants.js";
 

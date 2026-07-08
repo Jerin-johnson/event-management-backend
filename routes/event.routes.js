@@ -15,7 +15,7 @@ const eventRouter = express.Router();
 
 eventRouter.post("/", validateCreateEvent, createEvent);
 eventRouter.get("/user/:userId", validateGetEventUserId, getUserEvents);
-eventRouter.put("/:eventId", validateUpdateEvent, updateEvent);
+eventRouter.patch("/:eventId", validateUpdateEvent, updateEvent);
 eventRouter.get("/:eventId/logs", getEventLogs);
 
 export default eventRouter;

@@ -14,7 +14,7 @@ export const createUserProfile = async (data) => {
     }
 
     const profile = await userRepository.createProfile(data);
-    console.log("the profile");
+    console.log("the profile", profile);
     return profile;
 };
 
