@@ -15,4 +15,7 @@ export const SUCCESS_MESSAGES = {
 
     // Logs
     EVENT_LOG_FETCHED: "Event logs fetched successfully.",
+
+    //timezone
+    TIME_ZONE_FETCHED: "Timezones fetched successfully",
 };
