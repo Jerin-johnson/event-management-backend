@@ -9,7 +9,8 @@ import cors from "cors";
 import env from "./config/env.js";
 const app = express();
 
-app.use(morgan("dev"));
+app.use(morgan(env.MORGAN_FORMAT));
+
 app.use(
     cors({
         origin: env.FRONTEND_URL,

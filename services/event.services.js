@@ -7,6 +7,8 @@ import { ERROR_MESSAGES } from "../constants/error.constants.js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezonePlugin from "dayjs/plugin/timezone.js";
+import logger from "../utils/logger.js";
+import { normalize } from "../utils/normalize .js";
 
 dayjs.extend(utc);
 dayjs.extend(timezonePlugin);
@@ -53,14 +55,10 @@ export const getEventsForUser = async (userId) => {
 
     const events = await eventRepository.getEventsByProfile(userId);
 
-    console.log(events);
-
     return events;
 };
 
 export const updateEvent = async (eventId, updateData, changedBy) => {
-    console.log("is this called ", eventId, updateData, changedBy);
-
     const event = await eventRepository.findEventById(eventId);
     if (!event) {
         throw new ApiError(HTTP_STATUS.NOT_FOUND, ERROR_MESSAGES.EVENT_NOT_FOUND);
@@ -70,7 +68,6 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
     if (!isParticipant) {
         throw new ApiError(HTTP_STATUS.FORBIDDEN, ERROR_MESSAGES.PART_OF_EVENT_ONLY_UPDATE);
     }
-    console.log("the event", event);
 
     const previousValues = {
         timezone: event.timezone,
@@ -78,7 +75,7 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
         endDateTime: event.endDateTime,
         profiles: event.profiles.map((p) => ({
             _id: p._id,
-            name: p.name || "Unknown User",
+            name: p.name,
         })),
     };
 
@@ -97,26 +94,36 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
             .toDate();
     }
 
-    const logValues = { ...newUpdateData };
-    delete logValues.changedBy;
-    const changedFields = Object.keys(logValues).filter(
-        (key) => JSON.stringify(logValues[key]) !== JSON.stringify(previousValues[key])
-    );
+    const previousNormalized = normalize(previousValues);
+    const currentNormalized = normalize(newUpdateData);
+
+    console.log("the previos", previousNormalized);
+    console.log("the current", currentNormalized);
+
+    const changedFields = [];
+
+    for (const key of Object.keys(currentNormalized)) {
+        if (JSON.stringify(previousNormalized[key]) !== JSON.stringify(currentNormalized[key])) {
+            changedFields.push(key);
+        }
+    }
 
     if (changedFields.length === 0) {
         return event;
     }
 
+    const logValues = { ...newUpdateData };
+
+    delete logValues.changedBy;
+
     if (changedFields.includes("profiles")) {
         const getProfilesOfUpdatedUser = await userRepository.getUsersByIds(updateData.profiles);
         const formatAddedUser = getProfilesOfUpdatedUser.map((p) => ({
             _id: p._id,
-            name: p.name || "Unknown User",
+            name: p.name,
         }));
 
         logValues.profiles = formatAddedUser;
-
-        console.log("the formated", formatAddedUser);
     }
 
     const updatedEvent = await eventRepository.updateEvent(eventId, newUpdateData);
