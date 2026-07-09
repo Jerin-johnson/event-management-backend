@@ -9,11 +9,6 @@ const userSchema = new mongoose.Schema(
             minlength: 2,
             maxlength: 100,
         },
-        timezone: {
-            type: String,
-            required: true,
-            default: "Asia/Kolkata",
-        },
     },
     {
         timestamps: true,

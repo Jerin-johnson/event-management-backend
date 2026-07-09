@@ -53,26 +53,14 @@ export const getEventsForUser = async (userId) => {
 
     const events = await eventRepository.getEventsByProfile(userId);
 
-    // allevent times to user's timezone
-    const eventsInUserTz = events.map((event) => {
-        const startInUserTz = dayjs(event.startDateTime).tz(user.timezone);
-        const endInUserTz = dayjs(event.endDateTime).tz(user.timezone);
+    console.log(events);
 
-        return {
-            ...event.toObject(),
-            startDateTime: startInUserTz.format("YYYY-MM-DD HH:mm:ss"),
-            endDateTime: endInUserTz.format("YYYY-MM-DD HH:mm:ss"),
-            createdAt: dayjs(event.createdAt).tz(user.timezone).format(),
-            updatedAt: dayjs(event.updatedAt).tz(user.timezone).format(),
-        };
-    });
-
-    console.log(eventsInUserTz);
-
-    return eventsInUserTz;
+    return events;
 };
 
 export const updateEvent = async (eventId, updateData, changedBy) => {
+    console.log("is this called ", eventId, updateData, changedBy);
+
     const event = await eventRepository.findEventById(eventId);
     if (!event) {
         throw new ApiError(HTTP_STATUS.NOT_FOUND, ERROR_MESSAGES.EVENT_NOT_FOUND);
@@ -82,12 +70,16 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
     if (!isParticipant) {
         throw new ApiError(HTTP_STATUS.FORBIDDEN, ERROR_MESSAGES.PART_OF_EVENT_ONLY_UPDATE);
     }
+    console.log("the event", event);
 
     const previousValues = {
         timezone: event.timezone,
         startDateTime: event.startDateTime,
         endDateTime: event.endDateTime,
-        profiles: event.profiles.map((p) => p._id),
+        profiles: event.profiles.map((p) => ({
+            _id: p._id,
+            name: p.name || "Unknown User",
+        })),
     };
 
     const newUpdateData = { ...updateData };
@@ -105,15 +97,35 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
             .toDate();
     }
 
-    const updatedEvent = await eventRepository.updateEvent(eventId, newUpdateData);
+    const logValues = { ...newUpdateData };
+    delete logValues.changedBy;
+    const changedFields = Object.keys(logValues).filter(
+        (key) => JSON.stringify(logValues[key]) !== JSON.stringify(previousValues[key])
+    );
 
-    const changedFields = Object.keys(updateData);
+    if (changedFields.length === 0) {
+        return event;
+    }
+
+    if (changedFields.includes("profiles")) {
+        const getProfilesOfUpdatedUser = await userRepository.getUsersByIds(updateData.profiles);
+        const formatAddedUser = getProfilesOfUpdatedUser.map((p) => ({
+            _id: p._id,
+            name: p.name || "Unknown User",
+        }));
+
+        logValues.profiles = formatAddedUser;
+
+        console.log("the formated", formatAddedUser);
+    }
+
+    const updatedEvent = await eventRepository.updateEvent(eventId, newUpdateData);
 
     await eventLogRepository.createLog({
         event: eventId,
         changedBy,
         previousValues,
-        newValues: updateData,
+        newValues: logValues,
         changedFields,
     });
 

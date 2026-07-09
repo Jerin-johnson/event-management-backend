@@ -4,8 +4,18 @@ import userRouter from "./routes/user.routes.js";
 import eventRouter from "./routes/event.routes.js";
 import healthRouter from "./routes/health.routes.js";
 import timeZoneRouter from "./routes/timezone.routes.js";
-
+import morgan from "morgan";
+import cors from "cors";
+import env from "./config/env.js";
 const app = express();
+
+app.use(morgan("dev"));
+app.use(
+    cors({
+        origin: env.FRONTEND_URL,
+        credentials: true,
+    })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

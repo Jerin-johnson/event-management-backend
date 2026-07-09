@@ -21,5 +21,7 @@ export const updateEvent = async (id, updateData) => {
     return await Event.findByIdAndUpdate(id, updateData, {
         new: true,
         runValidators: true,
-    });
+    })
+        .populate("profiles", "name")
+        .populate("createdBy", "name");
 };
