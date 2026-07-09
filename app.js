@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const routes = [
     {
-        path: API_ROUTES.USER,
+        path: API_ROUTES.USERS,
         router: userRouter,
     },
     {
@@ -40,6 +40,8 @@ const routes = [
         router: timeZoneRouter,
     },
 ];
+
+console.log(API_ROUTES.USER);
 
 routes.forEach(({ path, router }) => {
     app.use(path, router);
