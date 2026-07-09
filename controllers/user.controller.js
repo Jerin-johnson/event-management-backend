@@ -12,5 +12,6 @@ export const createUserProfile = asyncHandler(async (req, res) => {
 export const getUserProfiles = asyncHandler(async (req, res) => {
     const { search = "", cursor, limit } = req.query;
     const result = await userService.getUserProfiles(search, cursor, limit);
+    console.log("the profile fetched successfully");
     return successResponse(res, result, SUCCESS_MESSAGES.PROFILES_FETCHED, HTTP_STATUS.OK);
 });
