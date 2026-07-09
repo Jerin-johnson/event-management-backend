@@ -7,14 +7,12 @@ import { ERROR_MESSAGES } from "../constants/error.constants.js";
 export const createUserProfile = async (data) => {
     const existingProfile = await userRepository.findProfileByName(data.name);
 
-    console.log(existingProfile);
-
     if (existingProfile) {
         throw new ApiError(HTTP_STATUS.CONFLICT, ERROR_MESSAGES.PROFILE_ALREADY_EXISTS);
     }
 
     const profile = await userRepository.createProfile(data);
-    console.log("the profile", profile);
+
     return profile;
 };
 

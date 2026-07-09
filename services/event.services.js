@@ -55,14 +55,10 @@ export const getEventsForUser = async (userId) => {
 
     const events = await eventRepository.getEventsByProfile(userId);
 
-    console.log(events);
-
     return events;
 };
 
 export const updateEvent = async (eventId, updateData, changedBy) => {
-    console.log("is this called ", eventId, updateData, changedBy);
-
     const event = await eventRepository.findEventById(eventId);
     if (!event) {
         throw new ApiError(HTTP_STATUS.NOT_FOUND, ERROR_MESSAGES.EVENT_NOT_FOUND);
@@ -72,7 +68,6 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
     if (!isParticipant) {
         throw new ApiError(HTTP_STATUS.FORBIDDEN, ERROR_MESSAGES.PART_OF_EVENT_ONLY_UPDATE);
     }
-    console.log("the event", event);
 
     const previousValues = {
         timezone: event.timezone,
@@ -101,6 +96,9 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
 
     const previousNormalized = normalize(previousValues);
     const currentNormalized = normalize(newUpdateData);
+
+    console.log("the previos", previousNormalized);
+    console.log("the current", currentNormalized);
 
     const changedFields = [];
 
