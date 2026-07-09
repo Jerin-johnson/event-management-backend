@@ -7,6 +7,7 @@ import timeZoneRouter from "./routes/timezone.routes.js";
 import morgan from "morgan";
 import cors from "cors";
 import env from "./config/env.js";
+import { API_ROUTES } from "./constants/api.constants.js";
 const app = express();
 
 app.use(morgan(env.MORGAN_FORMAT));
@@ -21,10 +22,28 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/events", eventRouter);
-app.use("/api/v1/health", healthRouter);
-app.use("/api/v1/timezones", timeZoneRouter);
+const routes = [
+    {
+        path: API_ROUTES.USER,
+        router: userRouter,
+    },
+    {
+        path: API_ROUTES.EVENTS,
+        router: eventRouter,
+    },
+    {
+        path: API_ROUTES.HEALTH,
+        router: healthRouter,
+    },
+    {
+        path: API_ROUTES.TIMEZONES,
+        router: timeZoneRouter,
+    },
+];
+
+routes.forEach(({ path, router }) => {
+    app.use(path, router);
+});
 
 app.use(errorHandler);
 
