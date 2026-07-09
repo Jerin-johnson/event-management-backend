@@ -7,6 +7,8 @@ import { ERROR_MESSAGES } from "../constants/error.constants.js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezonePlugin from "dayjs/plugin/timezone.js";
+import logger from "../utils/logger.js";
+import { normalize } from "../utils/normalize .js";
 
 dayjs.extend(utc);
 dayjs.extend(timezonePlugin);
@@ -78,7 +80,7 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
         endDateTime: event.endDateTime,
         profiles: event.profiles.map((p) => ({
             _id: p._id,
-            name: p.name || "Unknown User",
+            name: p.name,
         })),
     };
 
@@ -97,26 +99,33 @@ export const updateEvent = async (eventId, updateData, changedBy) => {
             .toDate();
     }
 
-    const logValues = { ...newUpdateData };
-    delete logValues.changedBy;
-    const changedFields = Object.keys(logValues).filter(
-        (key) => JSON.stringify(logValues[key]) !== JSON.stringify(previousValues[key])
-    );
+    const previousNormalized = normalize(previousValues);
+    const currentNormalized = normalize(newUpdateData);
+
+    const changedFields = [];
+
+    for (const key of Object.keys(currentNormalized)) {
+        if (JSON.stringify(previousNormalized[key]) !== JSON.stringify(currentNormalized[key])) {
+            changedFields.push(key);
+        }
+    }
 
     if (changedFields.length === 0) {
         return event;
     }
 
+    const logValues = { ...newUpdateData };
+
+    delete logValues.changedBy;
+
     if (changedFields.includes("profiles")) {
         const getProfilesOfUpdatedUser = await userRepository.getUsersByIds(updateData.profiles);
         const formatAddedUser = getProfilesOfUpdatedUser.map((p) => ({
             _id: p._id,
-            name: p.name || "Unknown User",
+            name: p.name,
         }));
 
         logValues.profiles = formatAddedUser;
-
-        console.log("the formated", formatAddedUser);
     }
 
     const updatedEvent = await eventRepository.updateEvent(eventId, newUpdateData);
