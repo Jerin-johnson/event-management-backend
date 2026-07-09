@@ -21,7 +21,7 @@ export const getUserProfiles = async (
     cursor = null,
     limit = PAGINATION.DEFAULT_LIMIT
 ) => {
-    //valdiation in limit ensure valdi limit
+    //valdiation in limit ensure valid limit
     const finalLimit = Math.min(Math.max(1, parseInt(limit)), PAGINATION.MAX_LIMIT);
 
     const profiles = await userRepository.getProfiles(search, cursor, finalLimit);
